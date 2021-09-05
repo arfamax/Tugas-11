@@ -1,0 +1,53 @@
+---
+title: "TUGAS 11"
+author: "IKHWAN ARIF FAUZAN (A11.2020.12867)"
+date: "9/5/2021"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r include=FALSE}
+#Summon_package
+library(ggplot2)
+library(plotly)
+library(lubridate)
+library(dplyr)
+
+#Import_dataset
+df <- read.csv("dataanime.csv")
+
+#data_agregat
+dfg <- df %>%
+  group_by(Studios, Type, Sources) %>%
+  summarise(rerata_score=mean(Score),rerata_member=mean(Members),rerata_favorite=mean(Favorites),rerata_scoredby=mean(Scored.by))
+dfg
+```
+
+## Visualisasi data 1
+Pada visualisasi ini menggunakan data dari kolom Starting.season, Favorites, Members dan juga Type. Dari yang sudah saya visualisasikan, saya mendapati bahwa pada anime dengan tipe selain TV jarang sekali menggunakan istilah season. Hal tersebut dapat dilihat pada visualisasi dibawah ini, dimana tipe TV mendominasi ditiap seasonnya sedangkan selain TV kebanyakan masuk ke tidak diketahui "-". Dan juga pada season Spring dapat dilihat bahwa pada season tersebut terdapat seri anime yang difavoritkan oleh banyak orang.
+```{r echo=FALSE}
+ggplot(df,aes(x=Starting.season,y=Favorites,size=Members,color=Type)) +
+  geom_point()
+```
+
+
+
+## Visualisasi data 2
+Pada visualisasi ini menggunakan data dari kolom Studios, Favorites yang diagregatkan menjadi rerata_favorite. Pada data dibawah ini, Studio White Fox rupanya menduduki posisi pertama pada studio yang paling difavoritkan. Hal tersebut terlihat jelas pada diagram bar dibawah studio White Fox memiliki grafik tertinggi.
+
+```{r echo=FALSE}
+plot_ly(dfg,x=~rerata_favorite,y=~Studios,type = "bar")
+```
+
+
+## Visualisasi data 3
+Pada visualisasi ini menggunakan data dari kolom Sources dan Members yang sudah diagregatkan menjadi rerata_member. Dengan visualisasi dibawah ini, saya dapat menemukan bahwa sumber cerita anime yang kebanyakan ditonton adalah dari manga. Hal itu dapat dilihat dari rerata membernya yang mencapai 31,1%, sedangkan anime dengan sumber cerita asli menduduki posisi kedua dengan jumlah 21,7% dan light novel rupanya hanya mencapai rerata member sebanyak 16%, sementara lainnya hanya minoritas.
+
+```{r echo=FALSE}
+plot_ly(dfg, labels = ~Sources, values = ~rerata_member, type = 'pie')
+
+```
+
